@@ -1,28 +1,37 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const errorHandler = require("./middleware/errorHandler");
+
+// --- CORREÇÃO AQUI ---
+// Aponte para a pasta ./src
+const connectDB = require("./src/config/db");
+const errorHandler = require("./src/middleware/errorHandler");
 
 dotenv.config({ path: "./.env" });
 
 connectDB();
 
-// Importar rotas
-const users = require("./routes/users");
-const auth = require("./routes/auth");
+// --- CORREÇÃO AQUI ---
+// Aponte para a pasta ./src
+const users = require("./src/routes/users");
+const auth = require("./src/routes/auth");
 
 const app = express();
 
 app.use(express.json());
+
+// Rota de Health Check
 app.get("/", (req, res) => {
-  res.send(`API Rodando normalmente`);
+  res.status(200).send("<h1>Aplicação funcionando 100%</h1>");
 });
 
-app.use("/  ", users);
+// Montar as rotas
+app.use("/api/users", users);
 app.use("/api/auth", auth);
 
+// Middleware de erro
 app.use(errorHandler);
 
+// Lógica de deploy da Vercel (Já está correta)
 if (process.env.VERCEL === undefined) {
   const PORT = process.env.PORT || 5000;
   const server = app.listen(PORT, () => {
@@ -37,5 +46,5 @@ if (process.env.VERCEL === undefined) {
   });
 }
 
-// Exporta o app para a Vercel usar como função serverless
+// Exporta o app para a Vercel
 module.exports = app;
