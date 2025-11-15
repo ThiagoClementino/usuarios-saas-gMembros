@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
   res.send(`API Rodando normalmente`);
 });
 
-app.use("/api/users", users);
+app.use("/  ", users);
 app.use("/api/auth", auth);
 
 app.use(errorHandler);
