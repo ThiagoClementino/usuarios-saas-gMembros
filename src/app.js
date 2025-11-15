@@ -1,17 +1,19 @@
 const express = require("express");
 const dotenv = require("dotenv");
 
-// CORREÇÃO: Os caminhos DEVEM começar com ./src
-const connectDB = require("./src/config/db");
-const errorHandler = require("./src/middleware/errorHandler");
+// --- CORREÇÃO AQUI ---
+// Removemos o "./src/" porque já estamos dentro da pasta src
+const connectDB = require("./config/db");
+const errorHandler = require("./middleware/errorHandler");
 
-dotenv.config({ path: "./.env" });
+dotenv.config({ path: "./.env" }); // O .env está na raiz, então este caminho está certo
 
 connectDB();
 
-// CORREÇÃO: Os caminhos DEVEM começar com ./src
-const users = require("./src/routes/users");
-const auth = require("./src/routes/auth");
+// --- CORREÇÃO AQUI ---
+// Removemos o "./src/"
+const users = require("./routes/users");
+const auth = require("./routes/auth");
 
 const app = express();
 app.use(express.json());
