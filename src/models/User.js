@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, "Por favor, adicione um telefone"],
   },
-  password: {
+  senha: {
     type: String,
     required: [true, "Por favor, adicione uma senha"],
     minlength: 6,
