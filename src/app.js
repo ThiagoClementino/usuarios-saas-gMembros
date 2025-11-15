@@ -1,15 +1,15 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const connectDB = require("./src/config/db");
-const errorHandler = require("./src/middleware/errorHandler");
+const connectDB = require("./config/db");
+const errorHandler = require("./middleware/errorHandler");
 
 dotenv.config({ path: "./.env" });
 
 connectDB();
 
 // Importar rotas
-const users = require("./src/routes/users");
-const auth = require("./src/routes/auth");
+const users = require("./routes/users");
+const auth = require("./routes/auth");
 
 const app = express();
 
