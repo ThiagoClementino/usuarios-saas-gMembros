@@ -6,10 +6,10 @@ const ErrorResponse = require("../utils/ErrorResponse"); // Precisamos disso par
 // @route   POST /api/users/register
 // @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { nomeCompleto, email, telefone, senha, confirmacaoSenha } = req.body;
+  const { nomeCompleto, email, telefone, senha, confirmarSenha } = req.body;
 
   // Validação usando nossa classe de Erro customizada
-  if (senha !== confirmacaoSenha) {
+  if (senha !== confirmarSenha) {
     return next(new ErrorResponse("As senhas não coincidem", 400));
   }
 

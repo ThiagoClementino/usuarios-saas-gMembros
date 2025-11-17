@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto"); // Módulo nativo do Node
 
 const UserSchema = new mongoose.Schema({
-  nome: {
+  nomeCompleto: {
     type: String,
     required: [true, "Por favor, adicione um nome completo"],
   },

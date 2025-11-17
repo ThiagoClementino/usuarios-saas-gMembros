@@ -1,35 +1,38 @@
 const express = require("express");
 const dotenv = require("dotenv");
-
-// --- CORREÇÃO AQUI ---
-// Removemos o "./src/" porque já estamos dentro da pasta src
+const cors = require("cors");
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorHandler");
-
-dotenv.config({ path: "./.env" }); // O .env está na raiz, então este caminho está certo
-
-connectDB();
-
-// --- CORREÇÃO AQUI ---
-// Removemos o "./src/"
 const users = require("./routes/users");
 const auth = require("./routes/auth");
 
+// 1. Carregar variáveis de ambiente
+dotenv.config({ path: "./.env" });
+
+// 2. Conectar ao banco de dados
+connectDB();
+
+// 3. CRIAR o app (AQUI)
 const app = express();
+
+// 4. USAR os middlewares (AGORA SIM)
+// O app.use(cors()) deve vir aqui, DEPOIS de 'const app'
+app.use(cors());
 app.use(express.json());
 
+// 5. Montar as rotas
 // Rota de Health Check
 app.get("/", (req, res) => {
   res.status(200).send("<h1>Aplicação funcionando 100%</h1>");
 });
 
-// Montar as rotas
 app.use("/api/users", users);
 app.use("/api/auth", auth);
 
+// 6. Middleware de Erro (deve ser o último 'app.use')
 app.use(errorHandler);
 
-// Lógica de deploy (NÃO MUDAR)
+// 7. Lógica de deploy (NÃO MUDAR)
 if (process.env.VERCEL === undefined) {
   const PORT = process.env.PORT || 5000;
   const server = app.listen(PORT, () => {
