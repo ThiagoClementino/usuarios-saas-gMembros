@@ -64,9 +64,10 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const resetToken = user.getResetPasswordToken();
   await user.save({ validateBeforeSave: false });
 
-  const resetUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/api/auth/resetpassword/${resetToken}`;
+  // const resetUrl = `${req.protocol}://${req.get(
+  //   "host"
+  // )}/reset-password/${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
   const message = `Você solicitou uma redefinição de senha. Clique neste link: \n\n ${resetUrl}`;
 
   try {
@@ -110,7 +111,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   user.senha = req.body.senha;
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
-  await user.save(); // O 'pre-save' hook fará o hash da nova senha
+  await user.save({ validateBeforeSave: false });
 
   // Logar o usuário automaticamente
   sendTokenResponse(user, 200, res);
