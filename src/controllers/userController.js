@@ -8,10 +8,8 @@ const ErrorResponse = require("../utils/ErrorResponse"); // Precisamos disso par
 exports.register = asyncHandler(async (req, res, next) => {
   const { nomeCompleto, email, telefone, senha, confirmarSenha } = req.body;
 
-  // Validação usando nossa classe de Erro customizada
-  if (senha !== confirmarSenha) {
-    return next(new ErrorResponse("As senhas não coincidem", 400));
-  }
+  // O bloco de validação de senha foi removido daqui.
+  // A API agora confia na validação do frontend.
 
   const user = await User.create({
     nomeCompleto,
