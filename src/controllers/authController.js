@@ -79,12 +79,17 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
     res.status(200).json({ success: true, data: "E-mail enviado" });
   } catch (err) {
-    console.error(err);
+    console.error("ERRO NO ENVIO DE E-MAIL:", err);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save({ validateBeforeSave: false });
 
-    return next(new ErrorResponse("Não foi possível enviar o e-mail", 500));
+    return next(
+      new ErrorResponse(
+        `Não foi possível enviar o e-mail. Detalhes: ${err.message}`,
+        500
+      )
+    );
   }
 });
 
