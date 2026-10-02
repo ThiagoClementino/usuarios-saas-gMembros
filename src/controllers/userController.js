@@ -6,7 +6,7 @@ const ErrorResponse = require("../utils/ErrorResponse"); // Precisamos disso par
 // @route   POST /api/users/register
 // @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { nomeCompleto, email, telefone, senha, confirmarSenha } = req.body;
+  const { nomeCompleto, email, cargo, telefone, senha, confirmarSenha } = req.body;
 
   // O bloco de validação de senha foi removido daqui.
   // A API agora confia na validação do frontend.
@@ -14,6 +14,7 @@ exports.register = asyncHandler(async (req, res, next) => {
   const user = await User.create({
     nomeCompleto,
     email,
+    cargo,
     telefone,
     senha,
   });
