@@ -27,12 +27,10 @@ const app = express();
 // ==========================================
 
 app.use(cors());
-
 app.use(express.json());
 
 // ==========================================
 // HEALTH CHECK
-// Não depende do MongoDB
 // ==========================================
 
 app.get("/", (req, res) => {
@@ -45,31 +43,28 @@ app.get("/", (req, res) => {
 
 // ==========================================
 // CONEXÃO COM MONGODB
-// Executada antes das rotas que usam banco
 // ==========================================
 
-app.use(
-  async (req, res, next) => {
-    try {
-      await connectDB();
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
 
-      next();
-    } catch (err) {
-      console.error(
-        "Erro de conexão com MongoDB:",
-        err
-      );
+    next();
+  } catch (err) {
+    console.error(
+      "Erro de conexão com MongoDB:",
+      err
+    );
 
-      return res
-        .status(500)
-        .json({
-          success: false,
-          error:
-            "Não foi possível conectar ao banco de dados.",
-        });
-    }
+    return res
+      .status(500)
+      .json({
+        success: false,
+        error:
+          "Não foi possível conectar ao banco de dados.",
+      });
   }
-);
+});
 
 // ==========================================
 // ROTAS
@@ -86,15 +81,13 @@ app.use(
 );
 
 // ==========================================
-// MIDDLEWARE GLOBAL DE ERROS
-// Deve permanecer após as rotas
+// MIDDLEWARE DE ERRO
 // ==========================================
 
 app.use(errorHandler);
 
 // ==========================================
 // EXECUÇÃO LOCAL
-// A Vercel utiliza module.exports = app
 // ==========================================
 
 if (
