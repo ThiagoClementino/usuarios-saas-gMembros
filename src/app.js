@@ -13,7 +13,8 @@ const auth = require("./routes/auth");
 // ==========================================
 
 dotenv.config({
-  path: "./.env",
+  // Resolve o .env pela localização do projeto.
+  path: require("path").resolve(__dirname, "../.env"),
 });
 
 // ==========================================
@@ -29,17 +30,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ==========================================
-// HEALTH CHECK
-// ==========================================
 
-app.get("/", (req, res) => {
-  return res
-    .status(200)
-    .send(
-      "<h1>Aplicação funcionando 100%</h1>"
-    );
-});
 
 // ==========================================
 // CONEXÃO COM MONGODB
@@ -64,6 +55,14 @@ app.use(async (req, res, next) => {
           "Não foi possível conectar ao banco de dados.",
       });
   }
+});
+
+
+// Só informa sucesso depois que o middleware conecta ao banco.
+app.get("/", (req, res) => {
+  return res
+    .status(200)
+    .send("<h1>Aplicação conectada ao banco de dados</h1>");
 });
 
 // ==========================================
