@@ -97,7 +97,15 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 // @route   POST /api/auth/resetpassword/:token
 // @access  Public
 exports.resetPassword = asyncHandler(async (req, res, next) => {
-  // Hashear o token da URL para comparar com o do banco
+  const senha = req.body?.senha;
+
+  // Valida antes de alterar o usuário ou consumir o token.
+  if (typeof senha !== "string" || senha.length < 6 || senha.length > 50) {
+    return next(
+      new ErrorResponse("A senha deve ter entre 6 e 50 caracteres", 400)
+    );
+  }
+
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(req.params.token)
@@ -112,13 +120,14 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Token inválido ou expirado", 400));
   }
 
-  // Definir nova senha e limpar campos de reset
-  user.senha = req.body.senha;
+  user.senha = senha;
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
+
+  // A senha já foi validada; campos antigos do perfil não bloqueiam o reset.
+  // O hook pre-save continua gerando o hash.
   await user.save({ validateBeforeSave: false });
 
-  // Logar o usuário automaticamente
   sendTokenResponse(user, 200, res);
 });
 
