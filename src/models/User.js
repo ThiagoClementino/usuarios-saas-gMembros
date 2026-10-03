@@ -44,15 +44,25 @@ const UserSchema = new mongoose.Schema({
 // --- HOOKS DO MONGOOSE ---
 
 // Hook: Criptografar a senha ANTES de salvar (pre-save)
-UserSchema.pre("save", async function (next) {
-  // Só executa se a senha foi modificada (ou é nova)
-  if (!this.isModified("senha")) {
-    next();
-  }
+UserSchema.pre(
+  "save",
+  async function () {
+    if (
+      !this.isModified("senha")
+    ) {
+      return;
+    }
 
-  const salt = await bcrypt.genSalt(10);
-  this.senha = await bcrypt.hash(this.senha, salt);
-});
+    const salt =
+      await bcrypt.genSalt(10);
+
+    this.senha =
+      await bcrypt.hash(
+        this.senha,
+        salt
+      );
+  }
+);
 UserSchema.methods.getSignedJwtToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
